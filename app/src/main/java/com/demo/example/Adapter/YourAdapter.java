@@ -70,18 +70,22 @@ public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nameTextView;
+        TextView name;
         TextView id;
         TextView trips;
         TextView country;
+        TextView slogon;
         TextView head;
         TextView website;
+        TextView titleName;
         ImageView logoImageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             id = itemView.findViewById(R.id.id);
-            nameTextView = itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.name);
+            slogon = itemView.findViewById(R.id.slogon);
+            titleName = itemView.findViewById(R.id.title);
             trips = itemView.findViewById(R.id.trips);
             logoImageView = itemView.findViewById(R.id.logo);
             head = itemView.findViewById(R.id.head);
@@ -90,12 +94,14 @@ public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
 
         public void bind(YourDataModel dataModel) {
-            nameTextView.setText(dataModel.getName());
+            name.setText(dataModel.getName());
             id.setText(dataModel.get_id().toString());
             trips.setText(dataModel.getTrips() + "");
             country.setText(dataModel.getAirline().get(0).getCountry());
             head.setText(dataModel.getAirline().get(0).getHeadQuarters());
             website.setText(dataModel.getAirline().get(0).getWebsite());
+            titleName.setText(dataModel.getAirline().get(0).getName());
+            slogon.setText("Slogan: "+dataModel.getAirline().get(0).getSlogan());
 
             Glide.with(itemView.getContext())
                     .load(dataModel.getAirline().get(0).getLogo())

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.demo.example.Adapter.YourAdapter;
-import com.demo.example.databinding.ActivityMainBinding;
 import com.demo.example.db.YourDao;
 import com.demo.example.db.YourRoomDatabase;
 import com.demo.example.repository.MyViewModel;
@@ -24,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding binding;
     private MyViewModel viewModel;
     private YourAdapter adapter;
     private int currentPage = 1;
@@ -36,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+        setContentView(R.layout.activity_main);
 
         viewModel = new ViewModelProvider(this).get(MyViewModel.class);
         RecyclerView recyclerView = findViewById(R.id.recyclerView); 
