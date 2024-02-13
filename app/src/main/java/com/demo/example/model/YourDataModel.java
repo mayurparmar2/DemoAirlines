@@ -30,7 +30,7 @@ public class YourDataModel {
     @SerializedName("__v")
     private int __v;
 
-    // Add an empty constructor for Room
+    
     public YourDataModel() {
     }
 

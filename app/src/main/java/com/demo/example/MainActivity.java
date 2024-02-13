@@ -18,13 +18,14 @@ import com.demo.example.Adapter.YourAdapter;
 import com.demo.example.databinding.ActivityMainBinding;
 import com.demo.example.db.YourDao;
 import com.demo.example.db.YourRoomDatabase;
+import com.demo.example.repository.MyViewModel;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    private YourViewModel viewModel;
+    private MyViewModel viewModel;
     private YourAdapter adapter;
     private int currentPage = 1;
     public boolean isLoading = false;
@@ -39,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        viewModel = new ViewModelProvider(this).get(YourViewModel.class);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView); // Replace with your actual RecyclerView ID
-        searchEditText = findViewById(R.id.search); // Replace with your actual EditText ID
+        viewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView); 
+        searchEditText = findViewById(R.id.search); 
 
         loadingPB = findViewById(R.id.idPBLoading);
         adapter = new YourAdapter();
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            && totalItemCount >= 5) {  // Load more items when we have at least 5 items visible
+                            && totalItemCount >= 5) {  
 
                         Log.e("MTAG", "onScrolled : " + currentPage);
 
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        // Set up search functionality
+        
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Filter data based on search query
+                
                 adapter.getFilter().filter(charSequence.toString());
             }
 

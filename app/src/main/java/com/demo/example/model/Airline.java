@@ -28,7 +28,7 @@ public class Airline {
     @SerializedName("established")
     private String established;
 
-    // Add an empty constructor for Room
+    
     public Airline() {
     }
 

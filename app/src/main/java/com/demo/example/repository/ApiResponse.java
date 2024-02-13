@@ -1,4 +1,4 @@
-package com.demo.example;
+package com.demo.example.repository;
 
 import com.demo.example.model.Pagination;
 import com.demo.example.model.YourDataModel;

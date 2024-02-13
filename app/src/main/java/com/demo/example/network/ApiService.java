@@ -1,4 +1,6 @@
-package com.demo.example;
+package com.demo.example.network;
+
+import com.demo.example.repository.ApiResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

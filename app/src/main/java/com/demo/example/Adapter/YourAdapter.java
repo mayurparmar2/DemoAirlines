@@ -22,9 +22,6 @@ import java.util.List;
 
 public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
-    private static final int VIEW_TYPE_ITEM = 0;
-    private static final int VIEW_TYPE_LOADING = 1;
-
     private List<YourDataModel> dataList;
     private List<YourDataModel> filteredList;
     private Context context;
@@ -46,39 +43,19 @@ public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         isLoading = loading;
         notifyDataSetChanged();
     }
-    @Override
-    public int getItemViewType(int position) {
-        return dataList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-    }
-//    @Override
-//    public int getItemViewType(int position) {
-//        return isLoading && position == getItemCount() - 1 ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-//    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        if (viewType == VIEW_TYPE_ITEM) {
-            View view = inflater.inflate(R.layout.your_item_layout, parent, false);
-            return new ItemViewHolder(view);
-        } else {
-            View view = inflater.inflate(R.layout.item_loading, parent, false);
-            return new LoadingViewHolder(view);
-        }
+        View view = inflater.inflate(R.layout.your_item_layout, parent, false);
+        return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ItemViewHolder) {
-            YourDataModel dataModel = filteredList.get(position);
-            ((ItemViewHolder) holder).bind(dataModel);
-        } else if (holder instanceof LoadingViewHolder) {
-            // Show loading indicator
-            ((LoadingViewHolder) holder).bind();
-        }
+        YourDataModel dataModel = filteredList.get(position);
+        ((ItemViewHolder) holder).bind(dataModel);
     }
 
     public List<YourDataModel> getDataList() {
@@ -115,7 +92,7 @@ public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public void bind(YourDataModel dataModel) {
             nameTextView.setText(dataModel.getName());
             id.setText(dataModel.get_id().toString());
-            id.setText(dataModel.getTrips() + "");
+            trips.setText(dataModel.getTrips() + "");
             country.setText(dataModel.getAirline().get(0).getCountry());
             head.setText(dataModel.getAirline().get(0).getHeadQuarters());
             website.setText(dataModel.getAirline().get(0).getWebsite());
@@ -125,19 +102,6 @@ public class YourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     .into(logoImageView);
         }
 
-    }
-
-    public static class LoadingViewHolder extends RecyclerView.ViewHolder {
-
-        ProgressBar progressBar;
-
-        public LoadingViewHolder(@NonNull View itemView) {
-            super(itemView);
-            progressBar = itemView.findViewById(R.id.progressBar);
-        }
-
-        public void bind() {
-        }
     }
 
     @Override

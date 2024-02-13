@@ -16,5 +16,5 @@ public class Pagination {
     @SerializedName("totalItems")
     private int totalItems;
 
-    // Getters
+    
 }
