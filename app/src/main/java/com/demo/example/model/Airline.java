@@ -19,7 +19,7 @@ public class Airline {
     @SerializedName("slogan")
     private String slogan;
 
-    @SerializedName("head_quarters")
+    @SerializedName("head_quaters")
     private String headQuarters;
 
     @SerializedName("website")

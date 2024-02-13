@@ -3,30 +3,34 @@ package com.demo.example;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.demo.example.Adapter.YourAdapter;
 import com.demo.example.databinding.ActivityMainBinding;
-import com.demo.example.model.YourDataModel;
+import com.demo.example.db.YourDao;
+import com.demo.example.db.YourRoomDatabase;
 
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private YourViewModel viewModel;
     private YourAdapter adapter;
     private int currentPage = 1;
-    private boolean isLoading = false;
+    public boolean isLoading = false;
     private boolean isLastPage = false;
     private EditText searchEditText;
+    private ProgressBar loadingPB;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView); // Replace with your actual RecyclerView ID
         searchEditText = findViewById(R.id.search); // Replace with your actual EditText ID
 
+        loadingPB = findViewById(R.id.idPBLoading);
         adapter = new YourAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -57,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
                             && totalItemCount >= 5) {  // Load more items when we have at least 5 items visible
+
+                        Log.e("MTAG", "onScrolled : " + currentPage);
+
                         loadMoreData();
                     }
                 }
@@ -80,29 +88,35 @@ public class MainActivity extends AppCompatActivity {
         });
         viewModel.getAllData(currentPage, 5).observe(this, newData -> {
             adapter.addData(newData);
+            loadingPB.setVisibility(View.GONE);
             isLoading = false;
-
             if (newData.size() < 5) {
                 isLastPage = true;
             }
         });
     }
+
     private void loadMoreData() {
         isLoading = true;
+        loadingPB.setVisibility(View.VISIBLE);
         viewModel.getAllData(currentPage, 5).observe(this, newData -> {
             if (newData != null && newData.size() > 0) {
                 adapter.addData(newData);
+
+                if (currentPage > 10) {
+                    YourRoomDatabase database = YourRoomDatabase.getDatabase(getApplicationContext());
+                    YourDao yourDao = database.yourDao();
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    executorService.execute(() -> {
+                        yourDao.insertAll(adapter.getDataList());
+                    });
+                }
                 currentPage++;
             } else {
                 isLastPage = true;
             }
+            loadingPB.setVisibility(View.GONE);
             isLoading = false;
         });
     }
-
-//    private void loadMoreData() {
-//        isLoading = true;
-//        currentPage++;
-//        viewModel.getAllData(currentPage, 5);
-//    }
 }

@@ -47,8 +47,14 @@ public class YourRepository {
                 }
             });
         }
-
+        loadData(page,size,data);
         // Make a Retrofit API call
+
+        return data;
+    }
+
+    private void loadData(int page, int size,MutableLiveData<List<YourDataModel>> data) {
+
         apiService.getAirlines(page, size).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -61,21 +67,21 @@ public class YourRepository {
                     // Save data to Room database for offline functionality
                     Log.e("MTAG", "onResponse : page : " +page);
 
-                    if (page == 5) {
-
-                        executorService.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                yourDao.insert(newData);
-//                                LiveData<List<YourDataModel>> listLiveData =  yourDao.getAllData();
-                                List<YourDataModel> dataList = yourDao.getAllData2();
-                                Log.e("MTAG", "onResponse: " +dataList.size());
-                            }
-                        });
-
-
-
-                    }
+//                    if (page == 5) {
+//
+//                        executorService.execute(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                yourDao.insert(newData);
+////                                LiveData<List<YourDataModel>> listLiveData =  yourDao.getAllData();
+//                                List<YourDataModel> dataList = yourDao.getAllData2();
+//                                Log.e("MTAG", "onResponse: " +dataList.size());
+//                            }
+//                        });
+//
+//
+//
+//                    }
 
                     data.postValue(newData);
                 }
@@ -83,10 +89,12 @@ public class YourRepository {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e("MTAG", "onFailure: " +t.getMessage());
+
+                loadData(page,size,data);
                 // Handle failure
             }
         });
 
-        return data;
     }
 }
